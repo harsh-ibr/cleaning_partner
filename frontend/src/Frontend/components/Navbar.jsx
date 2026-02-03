@@ -25,9 +25,12 @@ function Navbar() {
             </div>
 
             <div>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              <Link
+                to="/login"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
                 Login
-              </button>
+              </Link>
               <Link
                 to="/sign-up"
                 className="bg-yellow-300 text-black px-4 py-2 rounded hover:bg-yellow-200 ms-2"

@@ -16,6 +16,7 @@ const port = 3000;
 connectDB();
 
 app.use("/api", userRouter);
+
 app.get("/", (req, res) => {
   res.send("Hello World from Express!");
 });

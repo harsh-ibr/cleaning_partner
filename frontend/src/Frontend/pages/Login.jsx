@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
-function Signup() {
+function Login() {
+  const navigate = useNavigate();
+  const { token, user, login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
-    phone: "",
     password: "",
   });
+  //   useEffect(() => {
+  //     console.log(token, "token ----");
+  //     console.log(user, "user ----");
+  //   });
   const [errForm, setErrForm] = useState({});
   const [sucessMsg, setSucessMsg] = useState("");
   const handleChange = (e) => {
@@ -24,16 +29,18 @@ function Signup() {
     setErrForm({});
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/register/",
+        "http://localhost:3000/api/login/",
         formData,
       );
+
+      //   console.log(response.data.token);
       setFormData({
-        name: "",
         email: "",
-        phone: "",
         password: "",
       });
-      setSucessMsg(response.data.message);
+      login(response.data.user, response.data.token);
+      navigate("/admin/dashboard");
+      //   setSucessMsg(response.data.message);
     } catch (error) {
       if (error.status === 400) {
         const fieldsError = error.response.data.errors;
@@ -55,7 +62,7 @@ function Signup() {
         <div className="md:col-span-3 bg-white flex items-center justify-center px-8">
           <div className="w-full max-w-md">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">
-              Create Account
+              Login Account
             </h2>
             {sucessMsg && (
               <div className="flex items-start justify-between rounded-md bg-green-50 p-4 border border-green-200">
@@ -71,24 +78,9 @@ function Signup() {
                 </button>
               </div>
             )}
-            <p className="text-gray-600 mb-6">Start your journey with us</p>
+            {/* <p className="text-gray-600 mb-6">Start your journey with us</p> */}
 
             <form className="space-y-4">
-              <div>
-                <label className="block text-gray-700 mb-1">Full Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="John Doe"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-                {errForm?.name && (
-                  <p className="text-red-700"> {errForm?.name} </p>
-                )}
-              </div>
-
               <div>
                 <label className="block text-gray-700 mb-1">Email</label>
                 <input
@@ -103,20 +95,7 @@ function Signup() {
                   <p className="text-red-700"> {errForm?.email} </p>
                 )}
               </div>
-              <div>
-                <label className="block text-gray-700 mb-1">Phone</label>
-                <input
-                  type="text"
-                  name="phone"
-                  placeholder="John Doe"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-                {errForm?.phone && (
-                  <p className="text-red-700"> {errForm?.phone} </p>
-                )}
-              </div>
+
               <div>
                 <label className="block text-gray-700 mb-1">Password</label>
                 <input
@@ -137,14 +116,17 @@ function Signup() {
                 className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
                 onClick={handleSubmit}
               >
-                Sign Up
+                Login
               </button>
             </form>
 
             <p className="text-sm text-gray-600 mt-4 text-center">
-              Already have an account?
-              <Link to="/login" className="text-blue-600 hover:underline">
-                Login
+              Don’t have an account?
+              <Link
+                to="/sign-up"
+                className="text-blue-600 hover:underline ml-1"
+              >
+                Sign up
               </Link>
             </p>
           </div>
@@ -162,4 +144,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;
