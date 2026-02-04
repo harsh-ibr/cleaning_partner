@@ -16,9 +16,10 @@ function ActionButton({ id, editUrl, deleteUrl, onDeleteSuccess }) {
       {editUrl && (
         <Link
           to={`${editUrl}/${id}`}
-          className="btn btn-sm btn-outline-info me-1"
+          className="px-4 py-2 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white border border-blue-500 hover:border-transparent rounded me-1"
         >
-          <i className="bx bx-edit"></i>
+          Edit
+          {/* <i className="bx bx-edit"></i> */}
         </Link>
       )}
 
@@ -26,9 +27,10 @@ function ActionButton({ id, editUrl, deleteUrl, onDeleteSuccess }) {
         <button
           type="button"
           onClick={() => manageDelete()}
-          className="btn btn-sm btn-outline-danger"
+          className="px-4 py-2 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white border border-red-500 hover:border-transparent rounded"
         >
-          <i className="bx bx-trash"></i>
+          {/* <i className="bx bx-trash"></i> */}
+          Delete
         </button>
       )}
     </>

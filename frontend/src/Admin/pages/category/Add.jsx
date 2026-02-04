@@ -1,6 +1,60 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import Input from "../../../Utils/Input";
+import SelectBox from "../../../Utils/SelectBox";
+import Textarea from "../../../Utils/Textarea";
+import axios from "axios";
+import { AuthContext } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Add() {
+  const App_URL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+  const { token } = useContext(AuthContext);
+  const [formData, setFormData] = useState({
+    name: "",
+    status: "",
+    description: "",
+  });
+  const [errForm, setErrForm] = useState({});
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrForm({});
+    try {
+      const response = await axios.post(`${App_URL}/category`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFormData({
+        name: "",
+        status: "",
+        description: "",
+      });
+      navigate("/admin/category");
+    } catch (error) {
+      if (error.status === 400) {
+        const fieldsError = error.response.data.errors;
+        fieldsError.map((eRow, index) => {
+          const fieldName = eRow.field;
+          const fieldValue = eRow.message;
+          // console.log(fieldName, fieldValue);
+          setErrForm((prev) => ({
+            ...prev,
+            [fieldName]: fieldValue,
+          }));
+        });
+      }
+    }
+  };
+
   return (
     <>
       <div class="w-full max-w-2xl bg-white shadow-lg rounded-lg">
@@ -9,50 +63,45 @@ function Add() {
         </div>
         <form class="p-6 space-y-5">
           <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1">
-              Category Name
-            </label>
-            <input
-              type="text"
+            <Input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              isRequired={true}
+              error={errForm?.name}
+              title="Name"
               placeholder="Enter category name"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <SelectBox
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              isRequired={true}
+              error={errForm?.status}
+              title="Status"
+              options={[
+                { value: "active", label: "Active" },
+                { value: "inactive", label: "Inactive" },
+              ]}
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1">
-              Slug
-            </label>
-            <input
-              type="text"
-              placeholder="category-slug"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <Textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              isRequired={false}
+              error={errForm?.description}
+              title="Description"
             />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1">
-              Status
-            </label>
-            <select class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option>Active</option>
-              <option>Inactive</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1">
-              Description
-            </label>
-            <textarea
-              rows="4"
-              placeholder="Enter description"
-              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            ></textarea>
           </div>
 
           <div class="flex flex-col sm:flex-row gap-3 pt-4">
             <button
+              onClick={handleSubmit}
               type="submit"
               class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             >

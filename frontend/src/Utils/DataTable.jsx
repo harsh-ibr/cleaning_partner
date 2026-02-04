@@ -8,6 +8,7 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 // import useAxios from "../../Hooks/useAxios";
 // import Pagination from "../../components/Pagination";
+import useAxios from "../Hooks/useAxios";
 
 function DataTable({ table }) {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -18,15 +19,15 @@ function DataTable({ table }) {
   const deleteUrl = table?.deleteUrl;
   const bulkDelete = table?.bulkDelete;
   const type = table?.type;
-  const data = "";
+
   const { token } = useContext(AuthContext);
-  // const { data, pagination, handleTableList, handleBulkDelete } = useAxios();
+  const { data, pagination, handleTableList, handleBulkDelete } = useAxios();
   const [tableBody, setTableBody] = useState(data);
   const [checkedId, setCheckedId] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    // handleTableList(type, currentPage);
+    handleTableList(type, currentPage);
   }, [currentPage, type]);
 
   useEffect(() => {
@@ -132,28 +133,31 @@ function DataTable({ table }) {
 
   return (
     <>
-      <div className="card">
-        {/* <h5 className="card-header border-bottom">
-          {tableTitle && <span> {tableTitle}</span>}
-          {bulkDelete && (
-            <button
-              onClick={() => handleBulkDelete(bulkDelete, checkedId)}
-              className="btn btn-outline-danger float-end"
-            >
-              <i className="bx bx-trash"></i>
-              &nbsp; Bulk Delete
-            </button>
-          )}
-          {createUrl && (
-            <Link
-              to={createUrl}
-              className="btn btn-outline-primary float-end me-2"
-            >
-              <i className="bx bx-plus"></i> Create
-            </Link>
-          )}
-        </h5> */}
-        <div className="table-responsive text-nowrap">
+      <div className="max-w-7xl mx-auto bg-white shadow rounded-lg">
+        <div className="p-4 border-b">
+          <h2 className="text-lg font-semibold text-gray-700">
+            {tableTitle && <span> {tableTitle}</span>}
+            {bulkDelete && (
+              <button
+                onClick={() => handleBulkDelete(bulkDelete, checkedId)}
+                className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-1 px-4 border border-red-500 hover:border-transparent rounded float-end"
+              >
+                <i className="bx bx-trash"></i>
+                &nbsp; Bulk Delete
+              </button>
+            )}
+            {createUrl && (
+              <Link
+                to={createUrl}
+                className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded float-end me-2"
+              >
+                <i className="bx bx-plus"></i> Create
+              </Link>
+            )}
+          </h2>
+        </div>
+
+        <div className="overflow-x-auto">
           <table className="table min-w-full border-collapse">
             <thead className="bg-gray-100">
               <tr>
@@ -176,7 +180,14 @@ function DataTable({ table }) {
                           </th>
                         );
                       } else {
-                        return <th key={index}>{column.column}</th>;
+                        return (
+                          <th
+                            className="px-4 py-3 text-left text-sm font-semibold text-gray-600"
+                            key={index}
+                          >
+                            {column.column}
+                          </th>
+                        );
                       }
                     })
                   : null}

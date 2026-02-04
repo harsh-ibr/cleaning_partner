@@ -17,13 +17,16 @@ export default function Textarea({
   return (
     <>
       <div className="mb-3">
-        <label htmlFor={name} className="form-label fw-bold">
+        <label
+          htmlFor={name}
+          className="block text-sm font-medium text-gray-600 mb-1"
+        >
           {title ? title : formatLabel(name)}
-          {isRequired && <sup className="text-danger">*</sup>}
+          {isRequired && <sup className="text-red-700">*</sup>}
         </label>
         <textarea
           type="text"
-          className="form-control"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           id={name}
           name={name}
           value={value}
@@ -31,7 +34,7 @@ export default function Textarea({
           placeholder={formatLabel(name)}
           rows={rows}
         ></textarea>
-        {error && <div className="text-danger">{error}</div>}
+        {error && <div className="text-red-700">{error}</div>}
       </div>
     </>
   );

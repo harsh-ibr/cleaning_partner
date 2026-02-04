@@ -1,5 +1,6 @@
 import Category from "../models/Category.js";
 
+const module = "Category";
 const getAll = async (req, res) => {
   try {
     const page = req.query.page || 1;
@@ -32,7 +33,7 @@ const create = async (req, res) => {
 
     const response = await Category.insertOne(data);
     return res.status(200).json({
-      message: "Tag added successfully.",
+      message: `${module} added successfully.`,
       data: response,
     });
   } catch (error) {
@@ -58,11 +59,11 @@ const getById = async (req, res) => {
     const response = await Category.findById(req.params.id);
     if (!response) {
       return res.status(404).json({
-        error: "Tag is not found.",
+        error: `${module} is not found.`,
       });
     }
     return res.status(200).json({
-      message: "Tag fetched successfully.",
+      message: `${module} fetched successfully.`,
       data: response,
     });
   } catch (error) {
@@ -77,7 +78,7 @@ const updateById = async (req, res) => {
     const getById = await Category.findById(req.params.id);
     if (!getById) {
       return res.status(404).json({
-        error: "Tag is not found.",
+        error: `${module} is not found.`,
       });
     }
 
@@ -91,7 +92,7 @@ const updateById = async (req, res) => {
     });
 
     return res.status(200).json({
-      message: "Tag updated successfully.",
+      message: `${module} updated successfully.`,
       data: tag,
     });
   } catch (error) {
@@ -106,14 +107,14 @@ const deleteById = async (req, res) => {
     const getByID = await Category.findById(req.params.id);
     if (!getByID) {
       return res.status(404).json({
-        error: "Tag not found.",
+        error: `${module} not found.`,
       });
     }
 
     await Category.findByIdAndDelete(req.params.id);
 
     res.json({
-      message: "Tags deleted successfully.",
+      message: `${module} deleted successfully.`,
     });
   } catch (error) {
     return res.status(500).json({
@@ -133,7 +134,7 @@ const deleteMany = async (req, res) => {
     const result = await Category.deleteMany({ _id: { $in: ids } });
 
     res.json({
-      message: "Tags deleted successfully.",
+      message: `${module} deleted successfully.`,
       deletedCount: result.deletedCount,
     });
   } catch (error) {

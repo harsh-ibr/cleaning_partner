@@ -14,7 +14,7 @@ function List() {
       },
       {
         column: "status",
-        index: "staus",
+        index: "status",
       },
 
       {
@@ -26,23 +26,23 @@ function List() {
         index: "action",
       },
     ],
-    type: "ebay-products",
-    title: "Product List",
-    createUrl: "/admin/ecommerce/ebay/create",
-    editUrl: "/admin/ecommerce/ebay/edit/",
+    type: "category",
+    title: "Categories",
+    createUrl: "/admin/category/create",
+    editUrl: "/admin/category/edit/",
     deleteUrl: "/ebay-products/",
-    // bulkDelete: "product/bulk_delete",
+    bulkDelete: "product/bulk_delete",
   };
   return (
     <>
-      <div className="max-w-7xl mx-auto bg-white shadow rounded-lg">
+      {/* <div className="max-w-7xl mx-auto bg-white shadow rounded-lg">
         <div className="p-4 border-b">
-          <h2 className="text-lg font-semibold text-gray-700">Users List</h2>
+          <h2 className="text-lg font-semibold text-gray-700">Product List</h2>
         </div>
 
-        <div className="overflow-x-auto">
-          {<DataTable table={tableData} />}
-          {/* <table className="min-w-full border-collapse">
+        <div className="overflow-x-auto"> */}
+      {<DataTable table={tableData} />}
+      {/* <table className="min-w-full border-collapse">
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
@@ -103,8 +103,8 @@ function List() {
               </tr>
             </tbody>
           </table> */}
-        </div>
-      </div>
+      {/* </div>
+      </div> */}
     </>
   );
 }

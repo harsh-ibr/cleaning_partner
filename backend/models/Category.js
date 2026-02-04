@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const catgeorySchema = new mongoose.Schema(
+const categorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -27,11 +27,11 @@ const catgeorySchema = new mongoose.Schema(
       trim: true,
     },
     createdAt: {
-      type: Date(),
+      type: Date,
       default: Date.now(),
     },
     updatedAt: {
-      type: Date(),
+      type: Date,
       default: Date.now(),
     },
   },
@@ -64,4 +64,4 @@ categorySchema.pre("save", async function (next) {
   this.slug = counter === 1 ? slug : `${slug}-${counter}`;
   //   next();
 });
-export default mongoose.model("Category", catgeorySchema);
+export default mongoose.model("Category", categorySchema);
