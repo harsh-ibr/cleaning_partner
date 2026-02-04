@@ -6,8 +6,7 @@ import ActionButton from "./ActionButton";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
-// import useAxios from "../../Hooks/useAxios";
-// import Pagination from "../../components/Pagination";
+import Pagination from "./Pagination";
 import useAxios from "../Hooks/useAxios";
 
 function DataTable({ table }) {
@@ -225,12 +224,12 @@ function DataTable({ table }) {
               )}
             </tbody>
           </table>
-          {/* <div className="float-end mt-3 m-3">
+          <div className="float-end mt-3 m-3">
             <Pagination
               pagination={pagination}
               onPageChange={(p) => setCurrentPage(p)}
             />
-          </div> */}
+          </div>
         </div>
       </div>
     </>

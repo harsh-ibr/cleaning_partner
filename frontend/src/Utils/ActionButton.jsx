@@ -1,14 +1,14 @@
 import axios from "axios";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-// import useAxios from "../../Hooks/useAxios";
+import useAxios from "../Hooks/useAxios";
 
 function ActionButton({ id, editUrl, deleteUrl, onDeleteSuccess }) {
-  // const { handleDelete } = useAxios();
+  const { handleDelete } = useAxios();
   // onDeleteSuccess(id);
 
   const manageDelete = async () => {
-    // handleDelete(deleteUrl, id);
+    handleDelete(deleteUrl, id);
     onDeleteSuccess(id);
   };
   return (

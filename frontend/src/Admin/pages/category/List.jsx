@@ -30,8 +30,8 @@ function List() {
     title: "Categories",
     createUrl: "/admin/category/create",
     editUrl: "/admin/category/edit/",
-    deleteUrl: "/ebay-products/",
-    bulkDelete: "product/bulk_delete",
+    deleteUrl: "/category/",
+    bulkDelete: "category",
   };
   return (
     <>

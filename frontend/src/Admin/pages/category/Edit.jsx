@@ -1,14 +1,29 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Input from "../../../Utils/Input";
 import SelectBox from "../../../Utils/SelectBox";
 import Textarea from "../../../Utils/Textarea";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import useAxios from "../../../Hooks/useAxios";
 
 function Edit() {
+  const { data, handleGetRow } = useAxios();
+  const { id } = useParams();
   const App_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    handleGetRow("category", id);
+  }, [id]);
+
+  useEffect(() => {
+    setFormData({
+      name: data.name,
+      status: data.status,
+      description: data.description,
+    });
+  }, [data]);
   const { token } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
@@ -28,7 +43,7 @@ function Edit() {
     e.preventDefault();
     setErrForm({});
     try {
-      const response = await axios.post(`${App_URL}/category`, formData, {
+      const response = await axios.put(`${App_URL}/category/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,7 +75,9 @@ function Edit() {
       <div class="w-full max-w-2xl bg-white shadow-lg rounded-lg">
         <div class="border-b px-6 py-4">
           <h2 class="text-lg font-semibold text-gray-700">Edit Category</h2>
+          {data.name}
         </div>
+
         <form class="p-6 space-y-5">
           <div>
             <Input
