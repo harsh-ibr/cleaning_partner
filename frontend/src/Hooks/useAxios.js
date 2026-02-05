@@ -6,7 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 export default function useAxios() {
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState([]);
-  const { token } = useContext(AuthContext);
+  const { token, notification } = useContext(AuthContext);
   const API_BASE_URL = import.meta.env.VITE_API_URL;
 
   const handleAxios = useCallback(
@@ -35,7 +35,7 @@ export default function useAxios() {
   const handleTableList = useCallback(
     async (url, page) => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/category`, {
+        const response = await axios.get(`${API_BASE_URL}/${url}`, {
           params: {
             page: page,
           },
@@ -47,7 +47,11 @@ export default function useAxios() {
         setPagination(response.data.pagination);
         //console.log("handleTableList", response);
       } catch (error) {
-        console.log("Error", error);
+        setAlert({
+          color: "red",
+          message: error.response.data.message,
+        });
+        // console.log("Error", error);
       }
     },
     [API_BASE_URL, token],
@@ -68,8 +72,12 @@ export default function useAxios() {
         },
       });
       setData((prev) => prev.filter((row) => !data.includes(row._id)));
+      notification("green", response.data.message);
     } catch (error) {
-      alert(error.response.data.message);
+      // setAlert(error.response.data.message);
+      notification("red", error.response.data.message);
+
+      // alert(error.response.data.message);
     }
   });
 
@@ -82,8 +90,10 @@ export default function useAxios() {
       });
       // setData((prev) => prev.filter((row) => row._id !== id));
       setData((prev) => prev.filter((row) => row._id !== id));
+
+      notification("green", response.data.message);
     } catch (error) {
-      console.log(error);
+      notification("red", error.response.data.message);
     } finally {
     }
   });
@@ -96,10 +106,29 @@ export default function useAxios() {
         },
       });
       // setData((prev) => prev.filter((row) => row._id !== id));
-      console.log("dd Result : ", response.data.data);
       setData(response.data.data);
+      // notification("green", response.data.message);
     } catch (error) {
-      console.log(error);
+      notification("red", error.response.data.message);
+    } finally {
+    }
+  });
+
+  const getDataSelectBox = useCallback(async (url) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/${url}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const items = response.data.data;
+      const options = items.map((item) => ({
+        value: item._id, // 👈 id
+        label: item.name, // 👈 name
+      }));
+      return options;
+    } catch (error) {
+      notification("red", error.response.data.message);
     } finally {
     }
   });
@@ -112,5 +141,6 @@ export default function useAxios() {
     handleBulkDelete,
     handleDelete,
     handleGetRow,
+    getDataSelectBox,
   };
 }

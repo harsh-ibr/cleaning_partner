@@ -24,7 +24,7 @@ function Edit() {
       description: data.description,
     });
   }, [data]);
-  const { token } = useContext(AuthContext);
+  const { token, notification } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     status: "",
@@ -53,6 +53,8 @@ function Edit() {
         status: "",
         description: "",
       });
+
+      notification("green", response.data.message);
       navigate("/admin/category");
     } catch (error) {
       if (error.status === 400) {
@@ -66,6 +68,8 @@ function Edit() {
             [fieldName]: fieldValue,
           }));
         });
+      } else {
+        notification("red", error.response.data.message);
       }
     }
   };
@@ -75,7 +79,6 @@ function Edit() {
       <div class="w-full max-w-2xl bg-white shadow-lg rounded-lg">
         <div class="border-b px-6 py-4">
           <h2 class="text-lg font-semibold text-gray-700">Edit Category</h2>
-          {data.name}
         </div>
 
         <form class="p-6 space-y-5">

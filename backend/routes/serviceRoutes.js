@@ -7,7 +7,7 @@ import {
   deleteById,
   deleteMany,
   getAllSortByName,
-} from "../controller/CategoryController.js";
+} from "../controller/ServiceController.js";
 import protect from "../middleware/authMiddleware.js";
 import authorizeRoles from "../middleware/roleMiddleware.js";
 

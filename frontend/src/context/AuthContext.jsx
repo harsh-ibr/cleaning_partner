@@ -8,6 +8,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(
     Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null,
   );
+  const [alert, setAlert] = useState({
+    color: "",
+    message: "",
+  });
 
   const login = (userData, token) => {
     Cookies.set("user", JSON.stringify(userData));
@@ -23,8 +27,17 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
   };
 
+  const notification = (color, message) => {
+    setAlert({
+      color: color,
+      message: message,
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider
+      value={{ alert, user, token, login, logout, notification }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -40,6 +40,10 @@ const categorySchema = new mongoose.Schema(
   },
 );
 
+categorySchema.statics.getAll = function () {
+  return this.find().sort({ name: 1 }); // get all data
+};
+
 categorySchema.pre("save", async function (next) {
   if (!this.isModified("name")) return "";
 
@@ -64,4 +68,5 @@ categorySchema.pre("save", async function (next) {
   this.slug = counter === 1 ? slug : `${slug}-${counter}`;
   //   next();
 });
+
 export default mongoose.model("Category", categorySchema);

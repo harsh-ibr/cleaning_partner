@@ -1,13 +1,16 @@
-import Category from "../models/Category.js";
+import Service from "../models/Service.js";
 
-const module = "Category";
+const module = "Service";
 const getAll = async (req, res) => {
   try {
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
-    const response = await Category.find().skip(skip).limit(limit);
-    const total = await Category.countDocuments();
+    const response = await Service.find()
+      .populate("category", "name")
+      .skip(skip)
+      .limit(limit);
+    const total = await Service.countDocuments();
     const pages = Math.ceil(total / limit);
     return res.status(200).json({
       data: response,
@@ -31,33 +34,40 @@ const create = async (req, res) => {
       ...req.body,
     };
 
-    const response = await Category.insertOne(data);
+    const response = await Service.insertOne(data);
     return res.status(200).json({
       message: `${module} added successfully.`,
       data: response,
     });
   } catch (error) {
     if (error.name === "ValidationError") {
-      const errors = Object.values(error.errors).map((err) => ({
-        field: err.path,
-        message: err.message,
-      }));
+      const errors = Object.values(error.errors).map((err) => {
+        // Handle ObjectId cast error
+        if (err.name === "CastError") {
+          return {
+            field: err.path,
+            message: `The ${err.path} is required.`,
+          };
+        }
+
+        // Normal validation error
+        return {
+          field: err.path,
+          message: err.message,
+        };
+      });
 
       return res.status(400).json({
         success: false,
         errors,
       });
     }
-    return res.status(500).json({
-      message: "Something went to wrong.",
-      error: error.message,
-    });
   }
 };
 
 const getById = async (req, res) => {
   try {
-    const response = await Category.findById(req.params.id);
+    const response = await Service.findById(req.params.id);
     if (!response) {
       return res.status(404).json({
         error: `${module} is not found.`,
@@ -77,7 +87,7 @@ const getById = async (req, res) => {
 
 const updateById = async (req, res) => {
   try {
-    const getById = await Category.findById(req.params.id);
+    const getById = await Service.findById(req.params.id);
     if (!getById) {
       return res.status(404).json({
         error: `${module} is not found.`,
@@ -88,7 +98,7 @@ const updateById = async (req, res) => {
       ...req.body,
     };
 
-    const tag = await Category.findByIdAndUpdate(req.params.id, data, {
+    const tag = await Service.findByIdAndUpdate(req.params.id, data, {
       new: true,
       runValidators: true,
     });
@@ -107,14 +117,14 @@ const updateById = async (req, res) => {
 
 const deleteById = async (req, res) => {
   try {
-    const getByID = await Category.findById(req.params.id);
+    const getByID = await Service.findById(req.params.id);
     if (!getByID) {
       return res.status(404).json({
         error: `${module} not found.`,
       });
     }
 
-    await Category.findByIdAndDelete(req.params.id);
+    await Service.findByIdAndDelete(req.params.id);
 
     res.json({
       message: `${module} deleted successfully.`,
@@ -135,7 +145,7 @@ const deleteMany = async (req, res) => {
       return res.status(400).json({ success: false, message: "IDs required" });
     }
 
-    const result = await Category.deleteMany({ _id: { $in: ids } });
+    const result = await Service.deleteMany({ _id: { $in: ids } });
 
     res.json({
       message: `${module} deleted successfully.`,
@@ -151,7 +161,7 @@ const deleteMany = async (req, res) => {
 
 const getAllSortByName = async (req, res) => {
   try {
-    const response = await Category.getAll();
+    const response = await Service.getAll();
 
     return res.status(200).json({
       data: response,

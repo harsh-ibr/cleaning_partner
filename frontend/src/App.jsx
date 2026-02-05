@@ -7,6 +7,7 @@ import Signup from "./Frontend/Pages/Signup";
 import Login from "./Frontend/pages/Login";
 import Dashboard from "./Admin/pages/Dashboard";
 import categoryRoutes from "./Admin/routes/categoryRoutes.jsx";
+import serviceRoutes from "./Admin/routes/serviceRoutes.jsx";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" exect element={<Dashboard />} />
             {categoryRoutes}
+            {serviceRoutes}
           </Route>
         </Routes>
       </BrowserRouter>

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 function Add() {
   const App_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
-  const { token } = useContext(AuthContext);
+  const { token, notification } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     status: "",
@@ -38,6 +38,7 @@ function Add() {
         status: "",
         description: "",
       });
+      notification("green", response.data.message);
       navigate("/admin/category");
     } catch (error) {
       if (error.status === 400) {
@@ -51,6 +52,8 @@ function Add() {
             [fieldName]: fieldValue,
           }));
         });
+      } else {
+        notification("red", error.response.data.message);
       }
     }
   };

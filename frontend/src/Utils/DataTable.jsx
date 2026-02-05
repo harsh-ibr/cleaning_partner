@@ -8,6 +8,7 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import Pagination from "./Pagination";
 import useAxios from "../Hooks/useAxios";
+import Alert from "./Alert";
 
 function DataTable({ table }) {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -19,11 +20,12 @@ function DataTable({ table }) {
   const bulkDelete = table?.bulkDelete;
   const type = table?.type;
 
-  const { token } = useContext(AuthContext);
+  const { token, alert, notification } = useContext(AuthContext);
   const { data, pagination, handleTableList, handleBulkDelete } = useAxios();
   const [tableBody, setTableBody] = useState(data);
   const [checkedId, setCheckedId] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sucessMsg, setSucessMsg] = useState("");
 
   useEffect(() => {
     handleTableList(type, currentPage);
@@ -43,6 +45,9 @@ function DataTable({ table }) {
     setCheckedId((prev) => prev.filter((id) => id !== deletedId));
   };
 
+  const handleAlert = () => {
+    notification("", "");
+  };
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setCheckedId(tableBody.map((row) => row._id));
@@ -94,44 +99,15 @@ function DataTable({ table }) {
     return value;
   };
 
-  // const handleBulkDelete = async () => {
-  //   try {
-  //     console.log("Auth Toekn", token);
-  //     if (checkedId.length == 0) {
-  //       alert("Please select at least one item");
-  //       return;
-  //     }
-
-  //     const result = await axios.post(
-  //       `${API_BASE_URL}/api/product/bulk_delete`,
-  //       { ids: checkedId },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       },
-  //     );
-  //     setTableBody((prev) =>
-  //       prev.filter((row) => !checkedId.includes(row._id)),
-  //     );
-  //     // setIsAlert({
-  //     //   isShow: true,
-  //     //   type: "success",
-  //     //   message: result.data.message || "Products deleted successfully",
-  //     // });
-  //   } catch (error) {
-  //     alert(error.response.data.message);
-  //     // console.log("Error", error);
-  //     // setIsAlert({
-  //     //   isShow: true,
-  //     //   type: "danger",
-  //     //   message: error.response.data.message,
-  //     // });
-  //   }
-  // };
-
   return (
     <>
+      <div className="max-w-7xl mx-auto h-20">
+        <Alert
+          color={alert?.color}
+          message={alert?.message}
+          onClose={handleAlert}
+        />
+      </div>
       <div className="max-w-7xl mx-auto bg-white shadow rounded-lg">
         <div className="p-4 border-b">
           <h2 className="text-lg font-semibold text-gray-700">
